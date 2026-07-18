@@ -1,0 +1,47 @@
+pragma language_version >= 0.20.0;
+
+// ============================================================================
+// Midnight Compact Privacy Verifier Smart Contract
+// ============================================================================
+// This contract demonstrates Zero-Knowledge (ZK) privacy primitives in Midnight:
+// 1. Public Ledger State: On-chain verifiable data visible to all node operators.
+// 2. Private Witness: Off-chain confidential input provided by the client wallet.
+// 3. Disclose Function: Explicit mechanism to reveal minimum necessary proof outputs
+//    to public ledger without exposing private inputs.
+// ============================================================================
+
+export ledger public_counter: Cell<Uint<64>>;
+export ledger threshold_met_count: Cell<Uint<64>>;
+export ledger last_verification_passed: Cell<Boolean>;
+
+// Private witnesses - fetched locally from private wallet context
+witness secret_score(): Uint<64>;
+witness secret_pin(): Uint<32>;
+
+// Public circuit function for initialization
+export circuit initialize(): Void {
+    public_counter.write(0);
+    threshold_met_count.write(0);
+    last_verification_passed.write(false);
+}
+
+// Public circuit function: Verifies secret score against threshold
+export circuit verify_and_increment(min_required_score: Uint<64>): Void {
+    // Step 1: Access private witness inside local ZK prover sandbox
+    const score = secret_score();
+    
+    // Step 2: Perform zero-knowledge predicate evaluation
+    const is_qualified = score >= min_required_score;
+    
+    // Step 3: DISCLOSE - Explicitly convert private proof outcome into public ledger update.
+    // Notice: 'score' is NEVER passed into disclose(). Only 'is_qualified' (boolean) is disclosed!
+    const public_status = disclose(is_qualified);
+    
+    // Step 4: Update public ledger state based on disclosed boolean
+    last_verification_passed.write(public_status);
+    public_counter.write(public_counter.read() + 1);
+    
+    if (public_status) {
+        threshold_met_count.write(threshold_met_count.read() + 1);
+    }
+}
