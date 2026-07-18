@@ -1,0 +1,9 @@
+{
+  "network": "Preprod",
+  "contractName": "PrivacyVerifier",
+  "contractAddress": "mn_contract1preprod_6b0ba3c87f8c073b0341027d3e659b42547f9c00b146f13fee495635",
+  "transactionHash": "0x88c6e4cdf573dcc0faeb1d86a32e0df25220be0c28bf5af08a3801bbd2ba4dbd",
+  "blockHeight": 1482093,
+  "deployedAt": "2026-07-18T11:40:38.183Z",
+  "verificationKeyHash": "0x73194e6ca7b884cc63528779d0ffebbe54104bd3d31e51589ede9597f894dc5c"
+}

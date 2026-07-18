@@ -1,0 +1,34 @@
+{
+  "contractName": "PrivacyVerifier",
+  "version": "0.20.0",
+  "timestamp": "2026-07-18T11:40:04.709Z",
+  "circuits": [
+    {
+      "name": "initialize",
+      "publicInputs": [],
+      "privateWitnesses": [],
+      "constraintsCount": 142,
+      "zkProofType": "Groth16/Plonk-Midnight-ZK"
+    },
+    {
+      "name": "verify_and_increment",
+      "publicInputs": [
+        "min_required_score: Uint64"
+      ],
+      "privateWitnesses": [
+        "secret_score: Uint64",
+        "secret_pin: Uint32"
+      ],
+      "disclosedOutputs": [
+        "is_qualified: Boolean"
+      ],
+      "constraintsCount": 1284,
+      "zkProofType": "Groth16/Plonk-Midnight-ZK"
+    }
+  ],
+  "ledgerStateSchema": {
+    "public_counter": "Cell<Uint64>",
+    "threshold_met_count": "Cell<Uint64>",
+    "last_verification_passed": "Cell<Boolean>"
+  }
+}
