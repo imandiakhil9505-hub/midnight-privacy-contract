@@ -1,19 +1,17 @@
 export interface LedgerState {
-  public_counter: bigint;
-  threshold_met_count: bigint;
-  last_verification_passed: boolean;
+  counter: bigint;
+  threshold_met: bigint;
 }
 
 export interface PrivateWitnessContext {
-  secret_score: () => bigint;
-  secret_pin: () => number;
+  secret_value: () => bigint;
 }
 
-export class PrivacyVerifierContract {
+export class CounterContract {
   state: LedgerState;
   witness: PrivateWitnessContext;
 
   constructor(witness: PrivateWitnessContext);
   initialize(): Promise<void>;
-  verify_and_increment(minRequiredScore: bigint): Promise<{ disclosedResult: boolean }>;
+  increment_if_valid(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
 }

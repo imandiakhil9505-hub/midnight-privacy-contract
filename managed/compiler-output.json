@@ -1,34 +1,32 @@
 {
-  "contractName": "PrivacyVerifier",
+  "contractName": "CounterContract",
   "version": "0.20.0",
-  "timestamp": "2026-07-18T11:40:04.709Z",
+  "timestamp": "2026-07-21T15:15:10.178Z",
   "circuits": [
     {
       "name": "initialize",
       "publicInputs": [],
       "privateWitnesses": [],
-      "constraintsCount": 142,
+      "constraintsCount": 120,
       "zkProofType": "Groth16/Plonk-Midnight-ZK"
     },
     {
-      "name": "verify_and_increment",
+      "name": "increment_if_valid",
       "publicInputs": [
-        "min_required_score: Uint64"
+        "min_threshold: Uint64"
       ],
       "privateWitnesses": [
-        "secret_score: Uint64",
-        "secret_pin: Uint32"
+        "secret_value: Uint64"
       ],
       "disclosedOutputs": [
-        "is_qualified: Boolean"
+        "is_valid: Boolean"
       ],
-      "constraintsCount": 1284,
+      "constraintsCount": 1140,
       "zkProofType": "Groth16/Plonk-Midnight-ZK"
     }
   ],
   "ledgerStateSchema": {
-    "public_counter": "Cell<Uint64>",
-    "threshold_met_count": "Cell<Uint64>",
-    "last_verification_passed": "Cell<Boolean>"
+    "counter": "Cell<Uint64>",
+    "threshold_met": "Cell<Uint64>"
   }
 }

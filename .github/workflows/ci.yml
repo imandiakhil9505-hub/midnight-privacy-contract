@@ -1,0 +1,23 @@
+name: Midnight Smart Contract CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Dependencies
+        run: npm install
+      - name: Compile Compact Smart Contract
+        run: npm run compile
+      - name: Run Test Suite
+        run: npm test

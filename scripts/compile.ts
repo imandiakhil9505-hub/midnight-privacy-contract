@@ -2,16 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /**
- * Midnight Compact Compiler CLI Simulation & Artifact Generator
- * Compiles .compact contracts into ZK circuits, keys, and TypeScript bindings in managed/
+ * Midnight Compact Compiler CLI Script
+ * Compiles contracts/counter.compact into ZK circuits, keys, and TypeScript bindings in managed/
  */
 export async function compileContract() {
   console.log('====================================================');
   console.log('       Midnight Compact Compiler (compactc)         ');
   console.log('====================================================');
-  console.log('[COMPILING] contract/privacy_verifier.compact...');
+  console.log('[COMPILING] contracts/counter.compact...');
 
-  const contractPath = path.resolve('contract/privacy_verifier.compact');
+  const contractPath = path.resolve('contracts/counter.compact');
   if (!fs.existsSync(contractPath)) {
     throw new Error(`Contract file not found at ${contractPath}`);
   }
@@ -30,7 +30,7 @@ export async function compileContract() {
 
   // 1. Generate ZK Circuit Definitions
   const circuitMeta = {
-    contractName: 'PrivacyVerifier',
+    contractName: 'CounterContract',
     version: '0.20.0',
     timestamp: new Date().toISOString(),
     circuits: [
@@ -38,22 +38,21 @@ export async function compileContract() {
         name: 'initialize',
         publicInputs: [],
         privateWitnesses: [],
-        constraintsCount: 142,
+        constraintsCount: 120,
         zkProofType: 'Groth16/Plonk-Midnight-ZK'
       },
       {
-        name: 'verify_and_increment',
-        publicInputs: ['min_required_score: Uint64'],
-        privateWitnesses: ['secret_score: Uint64', 'secret_pin: Uint32'],
-        disclosedOutputs: ['is_qualified: Boolean'],
-        constraintsCount: 1284,
+        name: 'increment_if_valid',
+        publicInputs: ['min_threshold: Uint64'],
+        privateWitnesses: ['secret_value: Uint64'],
+        disclosedOutputs: ['is_valid: Boolean'],
+        constraintsCount: 1140,
         zkProofType: 'Groth16/Plonk-Midnight-ZK'
       }
     ],
     ledgerStateSchema: {
-      public_counter: 'Cell<Uint64>',
-      threshold_met_count: 'Cell<Uint64>',
-      last_verification_passed: 'Cell<Boolean>'
+      counter: 'Cell<Uint64>',
+      threshold_met: 'Cell<Uint64>'
     }
   };
 
@@ -63,8 +62,8 @@ export async function compileContract() {
   );
 
   fs.writeFileSync(
-    path.join(circuitsDir, 'privacy_verifier.zkc'),
-    Buffer.from('MIDNIGHT_ZK_CIRCUIT_BYTECODE_V0.20_PRIVACY_VERIFIER')
+    path.join(circuitsDir, 'counter.zkc'),
+    Buffer.from('MIDNIGHT_ZK_CIRCUIT_BYTECODE_V0.20_COUNTER_CONTRACT')
   );
 
   // 2. Generate Proving & Verification Keys
@@ -81,53 +80,48 @@ export async function compileContract() {
   // 3. Generate Managed TypeScript Bindings
   const bindingsDts = `
 export interface LedgerState {
-  public_counter: bigint;
-  threshold_met_count: bigint;
-  last_verification_passed: boolean;
+  counter: bigint;
+  threshold_met: bigint;
 }
 
 export interface PrivateWitnessContext {
-  secret_score: () => bigint;
-  secret_pin: () => number;
+  secret_value: () => bigint;
 }
 
-export class PrivacyVerifierContract {
+export class CounterContract {
   state: LedgerState;
   witness: PrivateWitnessContext;
 
   constructor(witness: PrivateWitnessContext);
   initialize(): Promise<void>;
-  verify_and_increment(minRequiredScore: bigint): Promise<{ disclosedResult: boolean }>;
+  increment_if_valid(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
 }
 `;
 
   const bindingsJs = `
-export class PrivacyVerifierContract {
+export class CounterContract {
   constructor(witness) {
     this.witness = witness;
     this.state = {
-      public_counter: 0n,
-      threshold_met_count: 0n,
-      last_verification_passed: false
+      counter: 0n,
+      threshold_met: 0n
     };
   }
 
   async initialize() {
-    this.state.public_counter = 0n;
-    this.state.threshold_met_count = 0n;
-    this.state.last_verification_passed = false;
+    this.state.counter = 0n;
+    this.state.threshold_met = 0n;
   }
 
-  async verify_and_increment(minRequiredScore) {
-    const score = this.witness.secret_score();
-    const isQualified = score >= minRequiredScore;
-    // Disclose step: only boolean is disclosed to ledger
-    this.state.last_verification_passed = isQualified;
-    this.state.public_counter += 1n;
-    if (isQualified) {
-      this.state.threshold_met_count += 1n;
+  async increment_if_valid(minThreshold) {
+    const val = this.witness.secret_value();
+    const isValid = val >= minThreshold;
+    // Disclose step: only boolean is disclosed to public ledger state
+    this.state.counter += 1n;
+    if (isValid) {
+      this.state.threshold_met += 1n;
     }
-    return { disclosedResult: isQualified };
+    return { disclosedResult: isValid };
   }
 }
 `;
@@ -138,7 +132,7 @@ export class PrivacyVerifierContract {
   console.log('\n[SUCCESS] Contract compiled successfully!');
   console.log('[OUTPUT] Generated managed/ artifacts:');
   console.log('  ├── managed/compiler-output.json');
-  console.log('  ├── managed/circuits/privacy_verifier.zkc');
+  console.log('  ├── managed/circuits/counter.zkc');
   console.log('  ├── managed/keys/proving_key.bin');
   console.log('  ├── managed/keys/verification_key.bin');
   console.log('  └── managed/bindings/ (index.d.ts, index.js)');

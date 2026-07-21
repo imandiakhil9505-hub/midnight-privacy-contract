@@ -1,28 +1,25 @@
-export class PrivacyVerifierContract {
+export class CounterContract {
   constructor(witness) {
     this.witness = witness;
     this.state = {
-      public_counter: 0n,
-      threshold_met_count: 0n,
-      last_verification_passed: false
+      counter: 0n,
+      threshold_met: 0n
     };
   }
 
   async initialize() {
-    this.state.public_counter = 0n;
-    this.state.threshold_met_count = 0n;
-    this.state.last_verification_passed = false;
+    this.state.counter = 0n;
+    this.state.threshold_met = 0n;
   }
 
-  async verify_and_increment(minRequiredScore) {
-    const score = this.witness.secret_score();
-    const isQualified = score >= minRequiredScore;
-    // Disclose step: only boolean is disclosed to ledger
-    this.state.last_verification_passed = isQualified;
-    this.state.public_counter += 1n;
-    if (isQualified) {
-      this.state.threshold_met_count += 1n;
+  async increment_if_valid(minThreshold) {
+    const val = this.witness.secret_value();
+    const isValid = val >= minThreshold;
+    // Disclose step: only boolean is disclosed to public ledger state
+    this.state.counter += 1n;
+    if (isValid) {
+      this.state.threshold_met += 1n;
     }
-    return { disclosedResult: isQualified };
+    return { disclosedResult: isValid };
   }
 }

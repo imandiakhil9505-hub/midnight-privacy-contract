@@ -1,0 +1,43 @@
+pragma language_version >= 0.20.0;
+
+// ============================================================================
+// MIDNIGHT PRIVACY COUNTER CONTRACT (Rise In Midnight Builder Challenge Level 1)
+// ============================================================================
+// PUBLIC STATE (On-Chain, Visible to Anyone):
+//   - counter: Cell<Uint<64>> (Total counter updates / verification attempts)
+//   - threshold_met: Cell<Uint<64>> (Count of successful threshold verifications)
+//
+// PRIVATE WITNESS (Off-Chain, Local Client Sandbox Only):
+//   - secret_value(): Uint<64> (User's private credential / secret integer score)
+//
+// PRIVACY PROOF (What the user proves without revealing):
+//   - Proves that secret_value >= min_threshold using disclose(is_valid)
+//     without leaking raw secret_value to the public blockchain ledger!
+// ============================================================================
+
+export ledger counter: Cell<Uint<64>>;
+export ledger threshold_met: Cell<Uint<64>>;
+
+witness secret_value(): Uint<64>;
+
+export circuit initialize(): Void {
+    counter.write(0);
+    threshold_met.write(0);
+}
+
+export circuit increment_if_valid(min_threshold: Uint<64>): Void {
+    // 1. Fetch private witness locally inside ZK prover
+    const val = secret_value();
+
+    // 2. Perform ZK predicate logic locally
+    const is_valid = val >= min_threshold;
+
+    // 3. DISCLOSE: Explicitly disclose ONLY the boolean evaluation result
+    const public_result = disclose(is_valid);
+
+    // 4. Update public ledger state based on disclosed boolean
+    counter.write(counter.read() + 1);
+    if (public_result) {
+        threshold_met.write(threshold_met.read() + 1);
+    }
+}
