@@ -89,6 +89,4 @@ An observer **cannot see**:
    npm run build
    ```
 
-## Demo Video
 
-[PLACEHOLDER — Click here to view Level 2 demo walk-through video]
