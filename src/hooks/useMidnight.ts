@@ -63,7 +63,7 @@ export function useMidnight() {
       setState((prev) => ({
         ...prev,
         isConnected: true,
-        walletAddress: changeAddress || 'mn_wallet1preprod_demo8a7e3b9f1d4c8e5a6b0c2d4e6',
+        walletAddress: changeAddress || 'mn_wallet1preprod_simulated8a7e3b9f1d4c8e5a6b0c2d4e6',
         isLoading: false,
         error: null
       }));
