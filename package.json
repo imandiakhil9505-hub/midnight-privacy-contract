@@ -1,9 +1,13 @@
 {
   "name": "midnight-privacy-contract",
   "version": "1.0.0",
-  "description": "Midnight Builder Challenge Level 1 - Privacy Counter Compact Contract",
+  "description": "Midnight Builder Challenge Level 2 - Privacy Counter UI Integration",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "compile": "tsx scripts/compile.ts",
     "test": "tsx --test tests/counter.test.ts",
     "deploy": "tsx scripts/deploy.ts",
@@ -20,9 +24,19 @@
   ],
   "author": "Midnight Developer",
   "license": "MIT",
+  "dependencies": {
+    "@midnight-ntwrk/dapp-connector-api": "^4.0.1",
+    "@midnight-ntwrk/midnight-js-network-provider": "file:./libs/midnight-js-network-provider",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite": "^6.0.1"
   }
 }
