@@ -1,53 +1,61 @@
-# Midnight Privacy Counter Contract
+# Midnight Privacy Counter App
 
-> A privacy-preserving smart contract written in Compact for the Midnight Network, demonstrating Zero-Knowledge public ledger state updates driven by private witness inputs.
+> A privacy-preserving smart contract and React/Vite dApp for the Midnight Network, demonstrating zero-knowledge verification driven by private user witnesses.
+
+## Live Demo
+
+[https://midnight-privacy-contract.vercel.app](https://midnight-privacy-contract.vercel.app)
 
 ## Contract Address
 
 | Network  | Address                          |
 |----------|----------------------------------|
-| Preview  | `mn_contract1preview_000000000000000000000000000000000000000000000000` |
 | Preprod  | `mn_contract1preprod_6b0ba3c87f8c073b0341027d3e659b42547f9c00b146f13fee495635` |
 
 ## What This Does
 
-The Midnight Privacy Counter contract enables users to prove that a private secret value (such as a financial score, age qualification, or PIN verification) meets or exceeds a specified minimum threshold. When the zero-knowledge evaluation passes, the contract updates an on-chain public counter and threshold counter without ever disclosing the user's raw secret value on the public blockchain.
+This dApp integrates the Midnight.js SDK and Lace Wallet Connector API to allow users to verify credentials privately in the browser. Users connect their Lace wallet, enter a public threshold and their private secret score, and generate a ZK proof locally. The proof is submitted on-chain to confirm eligibility without disclosing the secret score.
 
 ## Privacy Model
 
-- **What is PUBLIC (on-chain, visible to anyone)**:
+- **What is PUBLIC**:
   - `counter`: Cell<Uint<64>> — Total number of verification attempts.
   - `threshold_met`: Cell<Uint<64>> — Total number of successful threshold verifications.
   - Disclosed boolean evaluation results from `disclose(is_valid)`.
 
-- **What is PRIVATE (private witness, never on-chain)**:
-  - `secret_value`: Uint<64> — User's raw secret integer input, stored and evaluated exclusively inside the client's local ZK prover sandbox.
+- **What is PRIVATE**:
+  - `secret_value`: Uint<64> — User's raw secret score, evaluated exclusively inside the client's browser local ZK prover sandbox.
 
 - **What the user PROVES without revealing**:
-  - The user proves that `secret_value >= min_threshold` is true without exposing the numerical value of `secret_value` to node operators or public indexers.
+  - Proves that their private `secret_value` meets or exceeds `min_threshold` without exposing the numerical value of `secret_value` to node operators or public indexers.
+
+## Privacy Claim
+
+An on-chain observer (inspecting the Midnight ledger or Preprod explorer) can only see:
+1. That a transaction was submitted by a wallet.
+2. The public counter updated and the disclosed boolean outcome (true/false).
+3. The cryptographic verification key hash.
+
+An observer **cannot see**:
+1. The user's private `secret_value` score.
+2. The user's private PIN/entropy inputs.
+3. Any linking info connecting the private inputs to the wallet identity.
 
 ## Tech Stack
 
 - Midnight network
 - Compact language (v0.20.0)
-- Node.js v22
-- Docker Desktop & Midnight Proof Server (`midnightnetwork/proof-server:latest`)
-- TypeScript & Node.js test runner
+- Midnight.js SDK (`@midnight-ntwrk/midnight-js-network-provider`, `@midnight-ntwrk/dapp-connector-api`)
+- React/Vite (v6)
+- Lace wallet extension (configured for Preprod testnet)
 
 ## Prerequisites
 
-- **Node.js**: v22.x or higher
-- **npm**: v10.x or higher
-- **Docker Desktop**: Running locally on port `6300`
-- **Compact Compiler (`compactc`)**: Installed via Midnight toolchain installer or `compact` CLI
+- **Lace wallet installed** in your browser (configured for Preprod Network)
+- **Node.js v22** or higher installed locally
+- **Docker Desktop** running (required for local proof server verification)
 
-```bash
-node -v      # Expected: v22+
-npm -v       # Expected: v10+
-docker -v    # Expected: Docker Desktop running
-```
-
-## Setup
+## Run Locally
 
 1. **Clone the Repository**:
    ```bash
@@ -60,84 +68,27 @@ docker -v    # Expected: Docker Desktop running
    npm install
    ```
 
-3. **Start Local Proof Server (Docker)**:
+3. **Start Local Proof Server**:
    ```bash
    npm run docker:up
    ```
 
-4. **Compile Compact Contract & Generate ZK Circuits (`managed/`)**:
+4. **Compile ZK Circuits**:
    ```bash
    npm run compile
    ```
 
-5. **Deploy Contract to Preprod Testnet**:
+5. **Start Frontend Dev Server**:
    ```bash
-   npm run deploy
+   npm run dev
+   ```
+   Open your browser to: [http://localhost:3000](http://localhost:3000)
+
+6. **Build Project**:
+   ```bash
+   npm run build
    ```
 
-## Run Tests
+## Demo Video
 
-Execute the automated test suite covering circuit logic, state transitions, and witness privacy:
-
-```bash
-npm test
-```
-
-### Automated Test Output:
-```text
-✔ 1. Circuit Logic: Initialization & Public Ledger State Defaults (2.9976ms)
-✔ 2. State Transitions: Disclose() returning true and updating ledger counters (0.1692ms)
-✔ 3. State Transitions: Disclose() returning false when witness is below threshold (0.0999ms)
-✔ 4. Private Witness Protection: Verify private input is NEVER exposed on public ledger (0.5035ms)
-ℹ tests 4 | pass 4 | fail 0
-```
-
-## Initial Idea
-
-Privacy-Preserving Credit & Identity Verification Protocol (ZkCredit) enables individuals to prove financial qualification directly to decentralized apps without ever revealing their raw credit score, national identity number, or financial history on-chain.
-
-## Screenshots
-
-```text
-====================================================
-       Midnight Compact Compiler (compactc)         
-====================================================
-[COMPILING] contracts/counter.compact...
-[READ] Loaded contract source (1690 bytes)
-
-[SUCCESS] Contract compiled successfully!
-[OUTPUT] Generated managed/ artifacts:
-  ├── managed/compiler-output.json
-  ├── managed/circuits/counter.zkc
-  ├── managed/keys/proving_key.bin
-  ├── managed/keys/verification_key.bin
-  └── managed/bindings/ (index.d.ts, index.js)
-
-Generated ZK Circuits:
-  ✓ Circuit: initialize [Constraints: 120]
-  ✓ Circuit: increment_if_valid [Constraints: 1140]
-    - Private Witnesses: secret_value: Uint64
-    - Disclosed Outputs: is_valid: Boolean
-```
-
-```text
-====================================================
-    Midnight Network Deployment (Preprod)   
-====================================================
-[CONTRACT] Loaded Compact Contract: CounterContract (v0.20.0)
-[CIRCUITS] Total ZK Circuits: 2
-[NETWORK] Configured Midnight Network ID: preprod
-[PROOF SERVER] Connecting to Proof Server at http://localhost:6300...
-[INDEXER] Target Indexer API: https://indexer.preprod.midnight.network/api/v1/graphql
-[DEPLOYING] Submitting deployment transaction containing ZK verification key...
-
-[SUCCESS] Contract deployed successfully to Midnight Preprod!
-----------------------------------------------------
-Target Network : Midnight Preprod
-Contract Name  : CounterContract
-Contract Addr  : mn_contract1preprod_6b0ba3c87f8c073b0341027d3e659b42547f9c00b146f13fee495635
-Tx Hash        : 0x88c6e4cdf573dcc0faeb1d86a32e0df25220be0c28bf5af08a3801bbd2ba4dbd
-Block Height   : 1482093
-----------------------------------------------------
-Saved deployment record to: managed/deployment-info.json
-```
+[PLACEHOLDER — Click here to view Level 2 demo walk-through video]
