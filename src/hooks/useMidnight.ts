@@ -1,4 +1,6 @@
 import { useState, useCallback } from 'react';
+import { LaceConnector } from '@midnight-ntwrk/dapp-connector-api';
+import { MidnightNetworkProvider } from '@midnight-ntwrk/midnight-js-network-provider';
 
 // Interfaces for DApp Connector API
 export interface WalletInfo {

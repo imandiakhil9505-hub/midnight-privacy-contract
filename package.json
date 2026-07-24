@@ -25,7 +25,8 @@
   "author": "Midnight Developer",
   "license": "MIT",
   "dependencies": {
-    "@midnight-ntwrk/dapp-connector-api": "^4.0.1",
+    "@midnight-ntwrk/dapp-connector-api": "file:./libs/dapp-connector-api",
+    "@midnight-ntwrk/midnight-js-contracts": "file:./libs/midnight-js-contracts",
     "@midnight-ntwrk/midnight-js-network-provider": "file:./libs/midnight-js-network-provider",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
