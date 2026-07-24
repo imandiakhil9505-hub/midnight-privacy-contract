@@ -89,4 +89,10 @@ An observer **cannot see**:
    npm run build
    ```
 
+## Demo Video
+
+Watch the Level 2 DApp demonstration video on YouTube:  
+👉 **[Watch the Level 2 Demo Video](https://youtu.be/o3QgMhD1a_o?si=omJyOB_qS213xwQW)**
+
+
 
