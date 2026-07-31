@@ -38,10 +38,14 @@ export function useMidnight() {
         // Wait 1 second to simulate connection process
         await new Promise((resolve) => setTimeout(resolve, 1000));
         
+        // Generate dynamic simulated address instead of hardcoded string
+        const randomHex = Array.from({ length: 28 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+        const simulatedAddress = `mn_wallet1preprod_simulated_${randomHex}`;
+
         setState((prev) => ({
           ...prev,
           isConnected: true,
-          walletAddress: 'mn_wallet1preprod_simulated8a7e3b9f1d4c8e5a6b0c2d4e6',
+          walletAddress: simulatedAddress,
           isLoading: false,
           error: null
         }));
@@ -56,6 +60,10 @@ export function useMidnight() {
       const changeAddress = await api.getChangeAddress();
       console.log(`[LACE] Connected change address: ${changeAddress}`);
 
+      if (!changeAddress) {
+        throw new Error('Could not retrieve address from Lace wallet.');
+      }
+
       // 4. Verify network compatibility (Preprod/Testnet check)
       const networkId = await api.getNetworkId();
       if (networkId !== 0) { // 0 = Testnet/Preprod in cardano network identifier standard
@@ -65,7 +73,7 @@ export function useMidnight() {
       setState((prev) => ({
         ...prev,
         isConnected: true,
-        walletAddress: changeAddress || 'mn_wallet1preprod_simulated8a7e3b9f1d4c8e5a6b0c2d4e6',
+        walletAddress: changeAddress,
         isLoading: false,
         error: null
       }));
