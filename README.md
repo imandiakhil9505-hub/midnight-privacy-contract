@@ -20,15 +20,15 @@ This dApp integrates the Midnight.js SDK and Lace Wallet Connector API to allow 
 
 ## Privacy Model
 
-- **What is PUBLIC**:
+- **PUBLIC**:
   - `counter`: Cell<Uint<64>> — Total number of verification attempts.
   - `threshold_met`: Cell<Uint<64>> — Total number of successful threshold verifications.
   - Disclosed boolean evaluation results from `disclose(is_valid)`.
 
-- **What is PRIVATE**:
+- **PRIVATE**:
   - `secret_value`: Uint<64> — User's raw secret score, evaluated exclusively inside the client's browser local ZK prover sandbox.
 
-- **What the user PROVES without revealing**:
+- **PROVED without revealing**:
   - Proves that their private `secret_value` meets or exceeds `min_threshold` without exposing the numerical value of `secret_value` to node operators or public indexers.
 
 ## Privacy Claim
@@ -42,13 +42,6 @@ An observer **cannot see**:
 1. The user's private `secret_value` score.
 2. The user's private PIN/entropy inputs.
 3. Any linking info connecting the private inputs to the wallet identity.
-
-## Product Proposal: Age / Eligibility Gate
-
-The chosen proposal from the provided idea list is **Age / Eligibility Gate** (structured as a Privacy-Preserving Credit & Identity Verification Protocol named **ZkCredit**):
-
-- **Problem & Solution**: Standard digital gates force users to reveal their full age, exact credit score, or credential metrics to a backend server. ZkCredit solves this by performing the comparative inequality validation inside the client's browser using a local ZK-SNARK proof generator.
-- **Privacy Model & Selective Disclosure**: Node operators and public on-chain observers can only see a transaction execution, the public execution counter increments, and the disclosed validation boolean outcome. The raw integer inputs (representing age, score, or secret credential metrics) never leave the user's browser, proving eligibility completely privately.
 
 ## Tech Stack
 
@@ -64,7 +57,7 @@ The chosen proposal from the provided idea list is **Age / Eligibility Gate** (s
 - **Node.js v22** or higher installed locally
 - **Docker Desktop** running (required for local proof server verification)
 
-## Run Locally
+## Setup & Run Locally
 
 1. **Clone the Repository**:
    ```bash
@@ -98,10 +91,28 @@ The chosen proposal from the provided idea list is **Age / Eligibility Gate** (s
    npm run build
    ```
 
+## Run Tests
+
+To execute the smart contract unit and privacy verification test suite locally:
+
+```bash
+npm test
+```
+
+## CI/CD
+
+This repository is integrated with **GitHub Actions CI/CD** workflow. On every push or pull request to the `main` branch, the pipeline:
+1. Sets up the Node.js v22 runner environment.
+2. Installs dependencies clean from `package-lock.json`.
+3. Runs contract compilation (`npm run compile`) to verify Compact syntax and output ZK circuits.
+4. Executes the test suite (`npm test`) asserting state transition validity and private input safety.
+5. Performs production Vite compilation (`npm run build`) to guarantee zero compile errors in the frontend build.
+
+## Product Proposal
+
+See [PROPOSAL.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/PROPOSAL.md) in the root of the project directory.
+
 ## Demo Video
 
 Watch the Level 2 DApp demonstration video on YouTube:  
 👉 **[Watch the Level 2 Demo Video](https://youtu.be/o3QgMhD1a_o?si=omJyOB_qS213xwQW)**
-
-
-
