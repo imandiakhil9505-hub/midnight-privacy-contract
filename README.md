@@ -1,5 +1,7 @@
 # Midnight Privacy Counter App
 
+[![Midnight CI](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml/badge.svg)](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml)
+
 > A privacy-preserving smart contract and React/Vite dApp for the Midnight Network, demonstrating zero-knowledge verification driven by private user witnesses.
 
 ## Live Demo
@@ -40,6 +42,13 @@ An observer **cannot see**:
 1. The user's private `secret_value` score.
 2. The user's private PIN/entropy inputs.
 3. Any linking info connecting the private inputs to the wallet identity.
+
+## Product Proposal: Age / Eligibility Gate
+
+The chosen proposal from the provided idea list is **Age / Eligibility Gate** (structured as a Privacy-Preserving Credit & Identity Verification Protocol named **ZkCredit**):
+
+- **Problem & Solution**: Standard digital gates force users to reveal their full age, exact credit score, or credential metrics to a backend server. ZkCredit solves this by performing the comparative inequality validation inside the client's browser using a local ZK-SNARK proof generator.
+- **Privacy Model & Selective Disclosure**: Node operators and public on-chain observers can only see a transaction execution, the public execution counter increments, and the disclosed validation boolean outcome. The raw integer inputs (representing age, score, or secret credential metrics) never leave the user's browser, proving eligibility completely privately.
 
 ## Tech Stack
 

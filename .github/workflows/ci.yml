@@ -1,4 +1,4 @@
-name: Midnight Smart Contract CI/CD
+name: Midnight CI
 
 on:
   push:
@@ -9,15 +9,25 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js v22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Install Dependencies
-        run: npm install
-      - name: Compile Compact Smart Contract
-        run: npm run compile
-      - name: Run Test Suite
-        run: npm test
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js v22
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Contract Compilation
+      run: npm run compile
+
+    - name: Execute Tests
+      run: npm test
+
+    - name: Build Production Web App
+      run: npm run build
