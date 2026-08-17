@@ -106,4 +106,4 @@ See [docs/USAGE.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/do
 
 ## Product X Profile
 
-[PLACEHOLDER — I will add after creating the account]
+[https://x.com/zkusability](https://x.com/zkusability)
