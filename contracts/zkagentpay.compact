@@ -1,0 +1,56 @@
+pragma language_version >= 0.20.0;
+
+import { Uint, Cell, write, read } from "std";
+
+/**
+ * ZkAgentPay: Agent-to-Agent Payment Protocol Smart Contract
+ * 
+ * Privacy Model:
+ * - PUBLIC LEDGER STATE:
+ *   - total_payments_executed: Cell<Uint<64>> — Total count of verified agent transactions.
+ *   - total_sponsored_gas: Cell<Uint<64>> — Total sponsored gas actions on ledger.
+ * - PRIVATE WITNESS INPUT:
+ *   - secret_spending_balance(): Uint<64> — Current secret spending balance of the transacting agent.
+ * - WHAT THE USER PROVES:
+ *   - Proves that the payment amount plus their private daily spending balance does not exceed
+ *     the public limit policy (max_limit), without revealing their actual secret spending balance.
+ */
+contract ZkagentpayContract {
+    // Public ledger cells
+    total_payments_executed: Cell<Uint<64>>;
+    total_sponsored_gas: Cell<Uint<64>>;
+
+    // Private witness function definition
+    witness secret_spending_balance(): Uint<64>;
+
+    constructor() {
+        write(total_payments_executed, 0);
+        write(total_sponsored_gas, 0);
+    }
+
+    /**
+     * ZK-SNARK Policy Check
+     * Validates that transacting agent spending remains within policy limits.
+     */
+    export circuit validate_payment_limit(payment_amount: Uint<64>, max_limit: Uint<64>): Boolean {
+        // Query the private witness locally in the agent's browser prover context
+        const balance = secret_spending_balance();
+
+        // Perform validation check: current balance + payment_amount <= max_limit
+        const is_valid = (balance + payment_amount) <= max_limit;
+
+        // Disclose only the validation boolean result
+        const public_result = disclose(is_valid);
+
+        if (public_result) {
+            // Update public ledger counters
+            const current_payments = read(total_payments_executed);
+            write(total_payments_executed, current_payments + 1);
+
+            const current_gas = read(total_sponsored_gas);
+            write(total_sponsored_gas, current_gas + 1);
+        }
+
+        return public_result;
+    }
+}

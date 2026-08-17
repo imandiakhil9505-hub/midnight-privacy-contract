@@ -1,8 +1,8 @@
-# ZkUsability Layer
+# ZkAgentPay: Agent-to-Agent Payment Protocol
 
 [![Midnight CI](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml/badge.svg)](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml)
 
-> Hiding Web3 complexity with private wallet abstraction, sponsored gas, and decentralized social recovery driven by ZK-SNARK provers.
+> Secure payment protocol and platform enabling autonomous AI agents to transact under zero-knowledge policy controls, spending limits, and an auditable ledger.
 
 ## Live Demo
 
@@ -12,28 +12,28 @@
 
 | Network  | Address                              |
 |----------|--------------------------------------|
-| Preprod  | `mn_contract1preprod_335945b4e0eb4f3852a27ff5e0a219d35d083e55d780534597aeba0c` |
+| Preprod  | `mn_contract1preprod_0f740c8727639c1bad83038fcfff9c23ae313adedbd5bc3fcbd0990d` |
 
 ## What This Product Does
 
-ZkUsability is a decentralized usability layer designed to abstract blockchain complexity—offering wallet abstraction, gasless onboarding, and private identity/social recovery—so mainstream users can adopt Web3 applications without friction. It targets consumer Web3 application developers who embed the layer, and mainstream non-crypto end-users.
+ZkAgentPay is a secure payment protocol and platform designed to enable autonomous AI agents to transact with each other under policy controls, spending limits, and a complete audit ledger. It targets builders of agentic ecosystems and SaaS service providers selling compute or data assets to machines.
 
-Seed phrases, gas fees, and confusing browser extension wallets block mainstream adoption, resulting in onboarding drop-offs exceeding 90% for non-crypto users. Additionally, private key recovery is fragile and prone to human error. Current wallets expose raw cryptographic primitives to users, with no clean abstraction offering email login, sponsored gas, and secure recovery in one unified layer.
+As AI agents begin to purchase compute resources, data, and API keys autonomously, there is no safe standard for machine-to-machine payments. Letting agents execute financial operations without strict policy controls creates extreme risks of runaway spend, account drain, and zero audit accountability.
 
-Midnight specifically solves this by utilizing zero-knowledge contracts (Compact) and private witness inputs. It allows users to verify their login credentials, email mappings, and recovery thresholds entirely locally in the browser. Only the cryptographic proof of validity is disclosed on-chain, keeping the user's identity, private keys, and recovery network completely shielded from the public ledger.
+Midnight solves this by utilizing zero-knowledge contracts (Compact) and private witness inputs. Agents run local browser provers to verify that their transaction remains within daily limits and policy boundaries. Only the cryptographic proof of validity is submitted on-chain, keeping the transacting agent's private balance and identity shielded from public ledgers.
 
 ## Privacy Model
 
 - **What is PUBLIC (on-chain, anyone can see)**:
-  - `recovery_counter`: Cell<Uint<64>> — Total number of validated identity/recovery check attempts.
-  - `gas_sponsored_counter`: Cell<Uint<64>> — Total number of gas-sponsored recovery actions.
+  - `total_payments_executed`: Cell<Uint<64>> — Total count of verified agent transactions.
+  - `total_sponsored_gas`: Cell<Uint<64>> — Total sponsored gas actions on ledger.
   - Disclosed boolean evaluation results from `disclose(is_valid)`.
 
 - **What is PRIVATE (private witness, never on-chain)**:
-  - `secret_identity_key`: Uint<64> — Secret email/social key hash representing the user's private credentials, evaluated exclusively inside the client's browser local ZK prover sandbox.
+  - `secret_spending_balance`: Uint<64> — Secret daily spending balance of the agent, evaluated exclusively inside the client's browser local ZK prover sandbox.
 
 - **What the user PROVES without revealing**:
-  - Proves that their private `secret_identity_key` meets or exceeds `min_threshold` without exposing the numerical value of `secret_identity_key` to node operators, validators, or public indexers.
+  - Proves that the payment amount plus their private daily spending balance does not exceed the public limit policy (`balance + amount <= max_limit`), without exposing their actual spending balance.
 
 ## Tech Stack
 
@@ -106,4 +106,4 @@ See [docs/USAGE.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/do
 
 ## Product X Profile
 
-[https://x.com/zkusability](https://x.com/zkusability)
+[https://x.com/zkagentpay](https://x.com/zkagentpay)

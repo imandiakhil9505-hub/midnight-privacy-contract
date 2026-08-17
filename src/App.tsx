@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMidnight } from './hooks/useMidnight';
 import { WalletConnect } from './components/WalletConnect';
-import { ZkRecovery } from './components/ZkRecovery';
+import { ZkAgentPay } from './components/ZkAgentPay';
 import { Layout } from './components/Layout';
 
 export default function App() {
@@ -30,10 +30,10 @@ export default function App() {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
         }}>
-          ZkUsability Layer DApp
+          ZkAgentPay Console
         </h1>
         <p style={{ fontSize: '16px', color: '#9ca3af', maxWidth: '600px', margin: '0 auto' }}>
-          Level 4 Private Identity Verification & Social Recovery Gate, abstracting wallet complexity and leveraging local ZK-SNARK provers.
+          Autonomous AI Agent-to-Agent Payment Protocol. Secure machine transactions verified by local zero-knowledge policy check circuits.
         </p>
       </header>
 
@@ -49,8 +49,8 @@ export default function App() {
           onDisconnect={disconnectWallet}
         />
 
-        {/* ZkRecovery Panel */}
-        <ZkRecovery
+        {/* ZkAgentPay Panel */}
+        <ZkAgentPay
           isConnected={isConnected}
           isLoading={isLoading}
           txHash={txHash}
@@ -66,8 +66,8 @@ export default function App() {
           Midnight Builder Challenge Level 4 Submission
         </p>
         <div style={{ display: 'inline-flex', gap: '16px', fontSize: '12px' }}>
-          <span style={{ color: '#34d399' }}>✓ Proved with Local ZK-SNARK Prover</span>
-          <span style={{ color: '#60a5fa' }}>✓ Lace Wallet Connector API v1</span>
+          <span style={{ color: '#34d399' }}>✓ Zero-Knowledge Policy Enforcement</span>
+          <span style={{ color: '#60a5fa' }}>✓ Autonomous Agent SDK v1</span>
         </div>
       </footer>
     </Layout>

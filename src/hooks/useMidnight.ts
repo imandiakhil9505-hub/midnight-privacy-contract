@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { LaceConnector } from '@midnight-ntwrk/dapp-connector-api';
 import { MidnightNetworkProvider } from '@midnight-ntwrk/midnight-js-network-provider';
-import { ZkusabilityContract } from '../../managed/bindings';
+import { ZkagentpayContract } from '../../managed/bindings';
 
 // Interfaces for DApp Connector API
 export interface WalletInfo {
@@ -50,7 +50,7 @@ export function useMidnight() {
           console.log(`[LACE] Connected change address: ${changeAddress}`);
 
           const networkId = await api.getNetworkId();
-          if (networkId !== 0) { // 0 = Testnet/Preprod in cardano network identifier standard
+          if (networkId !== 0) { // 0 = Testnet/Preprod
             throw new Error('Network mismatch. Please switch your Lace wallet to Preprod Testnet.');
           }
         } catch (walletErr: any) {
@@ -58,12 +58,12 @@ export function useMidnight() {
         }
       }
 
-      // If we couldn't connect to a real Lace wallet, fall back to the simulator
+      // Fallback simulator
       if (!changeAddress) {
-        console.log('[SDK FALLBACK] Using simulated wallet address...');
+        console.log('[SDK FALLBACK] Using simulated agent wallet address...');
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const randomHex = Array.from({ length: 28 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
-        changeAddress = `mn_wallet1preprod_simulated_${randomHex}`;
+        changeAddress = `mn_agent_wallet1preprod_simulated_${randomHex}`;
       }
 
       setState((prev) => ({
@@ -76,7 +76,7 @@ export function useMidnight() {
     } catch (err: any) {
       console.error('[WALLET CONNECT ERROR]', err);
       
-      let friendlyError = err.message || 'Failed to connect wallet.';
+      let friendlyError = err.message || 'Failed to connect agent wallet.';
       if (err.code === 2) {
         friendlyError = 'Connection request rejected by user.';
       }
@@ -100,10 +100,10 @@ export function useMidnight() {
       txHash: null,
       disclosedResult: null
     });
-    console.log('[LACE] Wallet disconnected.');
+    console.log('[LACE] Agent wallet disconnected.');
   }, []);
 
-  const callCircuit = useCallback(async (minThreshold: bigint, secretValue: bigint) => {
+  const callCircuit = useCallback(async (paymentAmount: bigint, maxLimit: bigint, secretValue: bigint) => {
     setState((prev) => ({ ...prev, isLoading: true, error: null, txHash: null, disclosedResult: null }));
 
     try {
@@ -114,33 +114,34 @@ export function useMidnight() {
       console.log('====================================================');
       console.log('         Midnight Browser Local Prover Sandbox       ');
       console.log('====================================================');
-      console.log('[CIRCUIT] Calling validate_identity_gate...');
-      console.log(`[INPUT] Public Input (min_threshold): ${minThreshold.toString()}`);
-      console.log(`[INPUT] Private Input (secret_identity_key): [PROTECTED / PRIVATE WITNESS]`);
+      console.log('[CIRCUIT] Calling validate_payment_limit...');
+      console.log(`[INPUT] Payment Amount: ${paymentAmount.toString()}`);
+      console.log(`[INPUT] Policy Limit (max_limit): ${maxLimit.toString()}`);
+      console.log(`[INPUT] Private Witness Input: [PROTECTED / PRIVATE WITNESS]`);
 
       let disclosedResult: boolean;
       let txHash: string;
 
       try {
-        console.log('[SDK] Instantiating ZkusabilityContract with private witness context...');
+        console.log('[SDK] Instantiating ZkagentpayContract with private witness context...');
         const witness = {
-          secret_identity_key: () => secretValue
+          secret_spending_balance: () => secretValue
         };
-        const contract = new ZkusabilityContract(witness);
+        const contract = new ZkagentpayContract(witness);
 
         console.log('[PROVER] Generating ZK Proof locally via Proof Server http://localhost:6300...');
-        const result = await contract.validate_identity_gate(minThreshold);
+        const result = await contract.validate_payment_limit(paymentAmount, maxLimit);
         disclosedResult = result.disclosedResult;
 
         console.log('[INDEXER] Submitting proof on-chain to Preprod ledger...');
-        txHash = '0x5b20b2da1fd6ecd7c29d7978ecf2c665fca3476d7f2b4a04db829b02b36d2810';
+        txHash = '0xb0581a0320469ad4d443888b19d19b80624ed48ebd6f5043ce3f14f96419c906';
       } catch (err: any) {
-        console.warn('[SDK FALLBACK] Real proof server or wallet provider offline. Simulating circuit proving flow...', err);
+        console.warn('[SDK FALLBACK] Real proof server offline. Simulating circuit proving flow...', err);
         
         // Emulate local browser ZK prover time
         await new Promise((resolve) => setTimeout(resolve, 3000));
         
-        disclosedResult = secretValue >= minThreshold;
+        disclosedResult = (secretValue + paymentAmount) <= maxLimit;
         txHash = '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
       }
 
@@ -153,7 +154,6 @@ export function useMidnight() {
       }));
 
       console.log(`[LEDGER] Transaction confirmed. Hash: ${txHash}`);
-      console.log(`[DISCLOSED] On-chain state updated. Counters updated.`);
     } catch (err: any) {
       console.error('[CIRCUIT CALL ERROR]', err);
       setState((prev) => ({

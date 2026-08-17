@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-interface ZkRecoveryProps {
+interface ZkAgentPayProps {
   isConnected: boolean;
   isLoading: boolean;
   txHash: string | null;
   disclosedResult: boolean | null;
   error: string | null;
-  onCallCircuit: (minThreshold: bigint, secretValue: bigint) => void;
+  onCallCircuit: (paymentAmount: bigint, maxLimit: bigint, secretValue: bigint) => void;
 }
 
-export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
+export const ZkAgentPay: React.FC<ZkAgentPayProps> = ({
   isConnected,
   isLoading,
   txHash,
@@ -17,22 +17,24 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
   error,
   onCallCircuit
 }) => {
-  const [minThreshold, setMinThreshold] = useState<string>('700');
+  const [paymentAmount, setPaymentAmount] = useState<string>('50');
+  const [maxLimit, setMaxLimit] = useState<string>('500');
   const [secretValue, setSecretValue] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!minThreshold || !secretValue) return;
+    if (!paymentAmount || !maxLimit || !secretValue) return;
 
     try {
-      const thresholdBig = BigInt(minThreshold);
+      const paymentBig = BigInt(paymentAmount);
+      const limitBig = BigInt(maxLimit);
       const secretBig = BigInt(secretValue);
-      onCallCircuit(thresholdBig, secretBig);
+      onCallCircuit(paymentBig, limitBig, secretBig);
       
       // Clear the private witness input from UI memory immediately after trigger
       setSecretValue('');
     } catch (err) {
-      alert('Please enter valid integers for threshold and secret credential key.');
+      alert('Please enter valid integers for payment amount, limit policy, and secret spending balance.');
     }
   };
 
@@ -48,7 +50,7 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
         maxWidth: '480px',
         margin: '0 auto'
       }}>
-        🔌 Connect your Lace wallet above to unlock ZkUsability recovery functions.
+        🔌 Connect agent wallet endpoint to unlock ZkAgentPay transaction and policy checking functions.
       </div>
     );
   }
@@ -65,21 +67,21 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
       boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
     }}>
       <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', fontWeight: '600', color: '#60a5fa' }}>
-        Run ZkUsability Identity verification
+        Run Agent Spending Limit Check (ZK)
       </h2>
 
       <form onSubmit={handleSubmit}>
-        {/* Public Input */}
+        {/* Payment Amount */}
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', fontSize: '14px', color: '#d1d5db', marginBottom: '6px', fontWeight: '500' }}>
-            Public Threshold Score (min_threshold)
+            Payment Amount (payment_amount)
           </label>
           <input
             type="number"
-            value={minThreshold}
-            onChange={(e) => setMinThreshold(e.target.value)}
+            value={paymentAmount}
+            onChange={(e) => setPaymentAmount(e.target.value)}
             disabled={isLoading}
-            placeholder="e.g. 700"
+            placeholder="e.g. 50"
             style={{
               width: '100%',
               background: 'rgba(0, 0, 0, 0.2)',
@@ -94,17 +96,42 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
           />
         </div>
 
-        {/* Private Input (Witness) */}
+        {/* Public Spending Limit Policy */}
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', fontSize: '14px', color: '#d1d5db', marginBottom: '6px', fontWeight: '500' }}>
+            Policy Spending Limit (max_limit)
+          </label>
+          <input
+            type="number"
+            value={maxLimit}
+            onChange={(e) => setMaxLimit(e.target.value)}
+            disabled={isLoading}
+            placeholder="e.g. 500"
+            style={{
+              width: '100%',
+              background: 'rgba(0, 0, 0, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '8px',
+              padding: '10px 12px',
+              color: '#ffffff',
+              fontSize: '14px',
+              boxSizing: 'border-box',
+              outline: 'none'
+            }}
+          />
+        </div>
+
+        {/* Private spending balance (Witness) */}
         <div style={{ marginBottom: '20px' }}>
           <label style={{ display: 'block', fontSize: '14px', color: '#d1d5db', marginBottom: '6px', fontWeight: '500' }}>
-            Private Identity Key (secret_identity_key)
+            Private Spending Balance (secret_spending_balance)
           </label>
           <input
             type="password"
             value={secretValue}
             onChange={(e) => setSecretValue(e.target.value)}
             disabled={isLoading}
-            placeholder="Enter secret credential (e.g. 850)"
+            placeholder="Enter private balance (e.g. 350)"
             style={{
               width: '100%',
               background: 'rgba(0, 0, 0, 0.2)',
@@ -118,13 +145,13 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
             }}
           />
           <span style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginTop: '6px', fontStyle: 'italic' }}>
-            🛡️ Proved without revealing your input
+            🛡️ Proved without revealing your balance
           </span>
         </div>
 
         <button
           type="submit"
-          disabled={isLoading || !minThreshold || !secretValue}
+          disabled={isLoading || !paymentAmount || !maxLimit || !secretValue}
           style={{
             width: '100%',
             background: '#10b981',
@@ -134,20 +161,20 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
             borderRadius: '8px',
             fontSize: '14px',
             fontWeight: '600',
-            cursor: (isLoading || !minThreshold || !secretValue) ? 'not-allowed' : 'pointer',
-            opacity: (isLoading || !minThreshold || !secretValue) ? 0.6 : 1,
+            cursor: (isLoading || !paymentAmount || !maxLimit || !secretValue) ? 'not-allowed' : 'pointer',
+            opacity: (isLoading || !paymentAmount || !maxLimit || !secretValue) ? 0.6 : 1,
             transition: 'background 0.2s',
             outline: 'none',
             marginBottom: '16px'
           }}
           onMouseOver={(e) => {
-            if (!isLoading && minThreshold && secretValue) e.currentTarget.style.background = '#059669';
+            if (!isLoading && paymentAmount && maxLimit && secretValue) e.currentTarget.style.background = '#059669';
           }}
           onMouseOut={(e) => {
-            if (!isLoading && minThreshold && secretValue) e.currentTarget.style.background = '#10b981';
+            if (!isLoading && paymentAmount && maxLimit && secretValue) e.currentTarget.style.background = '#10b981';
           }}
         >
-          {isLoading ? 'Generating Proof locally in browser...' : 'Generate Proof & Submit'}
+          {isLoading ? 'Generating Proof locally in browser...' : 'Verify limit & Authorise Payment'}
         </button>
       </form>
 
@@ -184,16 +211,16 @@ export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
           marginTop: '16px'
         }}>
           <h3 style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#34d399', fontWeight: '600' }}>
-            ✓ Verification Confirmed!
+            ✓ Payment Succeeded & Logged!
           </h3>
           <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#d1d5db', lineHeight: '1.4' }}>
-            Identity validation transaction submitted. The network verified that your private key met the gate criteria.
+            The local ZK prover successfully validated that the transacting agent did not exceed policy spend limits.
           </p>
           
           <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>
             <strong>Disclosed Status:</strong>{' '}
             <span style={{ color: disclosedResult ? '#34d399' : '#f87171', fontWeight: 'bold' }}>
-              {disclosedResult ? 'VERIFIED (>= threshold)' : 'REJECTED (< threshold)'}
+              {disclosedResult ? 'VERIFIED (Within limit policy)' : 'DENIED (Exceeds limit policy)'}
             </span>
           </div>
 

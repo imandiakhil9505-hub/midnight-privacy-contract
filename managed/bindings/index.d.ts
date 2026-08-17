@@ -1,17 +1,17 @@
 export interface LedgerState {
-  recovery_counter: bigint;
-  gas_sponsored_counter: bigint;
+  total_payments_executed: bigint;
+  total_sponsored_gas: bigint;
 }
 
 export interface PrivateWitnessContext {
-  secret_identity_key: () => bigint;
+  secret_spending_balance: () => bigint;
 }
 
-export class ZkusabilityContract {
+export class ZkagentpayContract {
   state: LedgerState;
   witness: PrivateWitnessContext;
 
   constructor(witness: PrivateWitnessContext);
   initialize(): Promise<void>;
-  validate_identity_gate(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
+  validate_payment_limit(paymentAmount: bigint, maxLimit: bigint): Promise<{ disclosedResult: boolean }>;
 }

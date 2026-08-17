@@ -13,7 +13,7 @@ export async function deployToTestnet(targetNetwork = 'Preprod') {
   console.log('====================================================');
 
   const managedDir = path.resolve('managed');
-  const circuitFile = path.join(managedDir, 'circuits/zkusability.zkc');
+  const circuitFile = path.join(managedDir, 'circuits/zkagentpay.zkc');
   const vkFile = path.join(managedDir, 'keys/verification_key.bin');
   const compilerOutputFile = path.join(managedDir, 'compiler-output.json');
 

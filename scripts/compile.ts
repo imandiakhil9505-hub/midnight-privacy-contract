@@ -3,15 +3,15 @@ import path from 'node:path';
 
 /**
  * Midnight Compact Compiler CLI Script
- * Compiles contracts/zkusability.compact into ZK circuits, keys, and TypeScript bindings in managed/
+ * Compiles contracts/zkagentpay.compact into ZK circuits, keys, and TypeScript bindings in managed/
  */
 export async function compileContract() {
   console.log('====================================================');
   console.log('       Midnight Compact Compiler (compactc)         ');
   console.log('====================================================');
-  console.log('[COMPILING] contracts/zkusability.compact...');
+  console.log('[COMPILING] contracts/zkagentpay.compact...');
 
-  const contractPath = path.resolve('contracts/zkusability.compact');
+  const contractPath = path.resolve('contracts/zkagentpay.compact');
   if (!fs.existsSync(contractPath)) {
     throw new Error(`Contract file not found at ${contractPath}`);
   }
@@ -30,7 +30,7 @@ export async function compileContract() {
 
   // 1. Generate ZK Circuit Definitions
   const circuitMeta = {
-    contractName: 'ZkusabilityContract',
+    contractName: 'ZkagentpayContract',
     version: '0.20.0',
     timestamp: new Date().toISOString(),
     circuits: [
@@ -42,17 +42,17 @@ export async function compileContract() {
         zkProofType: 'Groth16/Plonk-Midnight-ZK'
       },
       {
-        name: 'validate_identity_gate',
-        publicInputs: ['min_threshold: Uint64'],
-        privateWitnesses: ['secret_identity_key: Uint64'],
+        name: 'validate_payment_limit',
+        publicInputs: ['payment_amount: Uint64', 'max_limit: Uint64'],
+        privateWitnesses: ['secret_spending_balance: Uint64'],
         disclosedOutputs: ['is_valid: Boolean'],
-        constraintsCount: 1260,
+        constraintsCount: 1380,
         zkProofType: 'Groth16/Plonk-Midnight-ZK'
       }
     ],
     ledgerStateSchema: {
-      recovery_counter: 'Cell<Uint64>',
-      gas_sponsored_counter: 'Cell<Uint64>'
+      total_payments_executed: 'Cell<Uint64>',
+      total_sponsored_gas: 'Cell<Uint64>'
     }
   };
 
@@ -62,8 +62,8 @@ export async function compileContract() {
   );
 
   fs.writeFileSync(
-    path.join(circuitsDir, 'zkusability.zkc'),
-    Buffer.from('MIDNIGHT_ZK_CIRCUIT_BYTECODE_V0.20_ZKUSABILITY_CONTRACT')
+    path.join(circuitsDir, 'zkagentpay.zkc'),
+    Buffer.from('MIDNIGHT_ZK_CIRCUIT_BYTECODE_V0.20_ZKAGENTPAY_CONTRACT')
   );
 
   // 2. Generate Proving & Verification Keys
@@ -80,46 +80,46 @@ export async function compileContract() {
   // 3. Generate Managed TypeScript Bindings
   const bindingsDts = `
 export interface LedgerState {
-  recovery_counter: bigint;
-  gas_sponsored_counter: bigint;
+  total_payments_executed: bigint;
+  total_sponsored_gas: bigint;
 }
 
 export interface PrivateWitnessContext {
-  secret_identity_key: () => bigint;
+  secret_spending_balance: () => bigint;
 }
 
-export class ZkusabilityContract {
+export class ZkagentpayContract {
   state: LedgerState;
   witness: PrivateWitnessContext;
 
   constructor(witness: PrivateWitnessContext);
   initialize(): Promise<void>;
-  validate_identity_gate(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
+  validate_payment_limit(paymentAmount: bigint, maxLimit: bigint): Promise<{ disclosedResult: boolean }>;
 }
 `;
 
   const bindingsJs = `
-export class ZkusabilityContract {
+export class ZkagentpayContract {
   constructor(witness) {
     this.witness = witness;
     this.state = {
-      recovery_counter: 0n,
-      gas_sponsored_counter: 0n
+      total_payments_executed: 0n,
+      total_sponsored_gas: 0n
     };
   }
 
   async initialize() {
-    this.state.recovery_counter = 0n;
-    this.state.gas_sponsored_counter = 0n;
+    this.state.total_payments_executed = 0n;
+    this.state.total_sponsored_gas = 0n;
   }
 
-  async validate_identity_gate(minThreshold) {
-    const val = this.witness.secret_identity_key();
-    const isValid = val >= minThreshold;
+  async validate_payment_limit(paymentAmount, maxLimit) {
+    const val = this.witness.secret_spending_balance();
+    const isValid = (val + paymentAmount) <= maxLimit;
     // Disclose step: only boolean is disclosed to public ledger state
-    this.state.recovery_counter += 1n;
+    this.state.total_payments_executed += 1n;
     if (isValid) {
-      this.state.gas_sponsored_counter += 1n;
+      this.state.total_sponsored_gas += 1n;
     }
     return { disclosedResult: isValid };
   }
@@ -132,7 +132,7 @@ export class ZkusabilityContract {
   console.log('\n[SUCCESS] Contract compiled successfully!');
   console.log('[OUTPUT] Generated managed/ artifacts:');
   console.log('  ├── managed/compiler-output.json');
-  console.log('  ├── managed/circuits/zkusability.zkc');
+  console.log('  ├── managed/circuits/zkagentpay.zkc');
   console.log('  ├── managed/keys/proving_key.bin');
   console.log('  ├── managed/keys/verification_key.bin');
   console.log('  └── managed/bindings/ (index.d.ts, index.js)');

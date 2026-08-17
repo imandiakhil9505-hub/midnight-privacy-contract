@@ -1,11 +1,11 @@
-import { ZkusabilityContract } from '../../managed/bindings';
+import { ZkagentpayContract } from '../../managed/bindings';
 
 /**
- * ZkUsability SDK Contract Interaction Helper
+ * ZkAgentPay SDK Contract Interaction Helper
  */
-export function getZkusabilityContract(secretValue: bigint): ZkusabilityContract {
+export function getZkagentpayContract(secretValue: bigint): ZkagentpayContract {
   const witness = {
-    secret_identity_key: () => secretValue
+    secret_spending_balance: () => secretValue
   };
-  return new ZkusabilityContract(witness);
+  return new ZkagentpayContract(witness);
 }

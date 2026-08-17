@@ -1,7 +1,7 @@
 {
-  "contractName": "ZkusabilityContract",
+  "contractName": "ZkagentpayContract",
   "version": "0.20.0",
-  "timestamp": "2026-08-17T14:36:35.863Z",
+  "timestamp": "2026-08-17T15:11:33.754Z",
   "circuits": [
     {
       "name": "initialize",
@@ -11,22 +11,23 @@
       "zkProofType": "Groth16/Plonk-Midnight-ZK"
     },
     {
-      "name": "validate_identity_gate",
+      "name": "validate_payment_limit",
       "publicInputs": [
-        "min_threshold: Uint64"
+        "payment_amount: Uint64",
+        "max_limit: Uint64"
       ],
       "privateWitnesses": [
-        "secret_identity_key: Uint64"
+        "secret_spending_balance: Uint64"
       ],
       "disclosedOutputs": [
         "is_valid: Boolean"
       ],
-      "constraintsCount": 1260,
+      "constraintsCount": 1380,
       "zkProofType": "Groth16/Plonk-Midnight-ZK"
     }
   ],
   "ledgerStateSchema": {
-    "recovery_counter": "Cell<Uint64>",
-    "gas_sponsored_counter": "Cell<Uint64>"
+    "total_payments_executed": "Cell<Uint64>",
+    "total_sponsored_gas": "Cell<Uint64>"
   }
 }

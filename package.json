@@ -1,7 +1,7 @@
 {
   "name": "midnight-privacy-contract",
   "version": "1.0.0",
-  "description": "Midnight Builder Challenge Level 4 - ZkUsability Private Onboarding & Social Recovery Gate",
+  "description": "Midnight Builder Challenge Level 4 - ZkAgentPay Secure Agent-to-Agent Payment Protocol",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "compile": "tsx scripts/compile.ts",
-    "test": "tsx --test tests/zkusability.test.ts",
+    "test": "tsx --test tests/zkagentpay.test.ts",
     "deploy": "tsx scripts/deploy.ts",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"
