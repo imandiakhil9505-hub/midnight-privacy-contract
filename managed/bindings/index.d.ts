@@ -1,17 +1,17 @@
 export interface LedgerState {
-  counter: bigint;
-  threshold_met: bigint;
+  recovery_counter: bigint;
+  gas_sponsored_counter: bigint;
 }
 
 export interface PrivateWitnessContext {
-  secret_value: () => bigint;
+  secret_identity_key: () => bigint;
 }
 
-export class CounterContract {
+export class ZkusabilityContract {
   state: LedgerState;
   witness: PrivateWitnessContext;
 
   constructor(witness: PrivateWitnessContext);
   initialize(): Promise<void>;
-  increment_if_valid(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
+  validate_identity_gate(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
 }

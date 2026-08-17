@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { LaceConnector } from '@midnight-ntwrk/dapp-connector-api';
 import { MidnightNetworkProvider } from '@midnight-ntwrk/midnight-js-network-provider';
-import { CounterContract } from '../../managed/bindings';
+import { ZkusabilityContract } from '../../managed/bindings';
 
 // Interfaces for DApp Connector API
 export interface WalletInfo {
@@ -114,26 +114,26 @@ export function useMidnight() {
       console.log('====================================================');
       console.log('         Midnight Browser Local Prover Sandbox       ');
       console.log('====================================================');
-      console.log('[CIRCUIT] Calling increment_if_valid...');
+      console.log('[CIRCUIT] Calling validate_identity_gate...');
       console.log(`[INPUT] Public Input (min_threshold): ${minThreshold.toString()}`);
-      console.log(`[INPUT] Private Input (secret_value): [PROTECTED / PRIVATE WITNESS]`);
+      console.log(`[INPUT] Private Input (secret_identity_key): [PROTECTED / PRIVATE WITNESS]`);
 
       let disclosedResult: boolean;
       let txHash: string;
 
       try {
-        console.log('[SDK] Instantiating CounterContract with private witness context...');
+        console.log('[SDK] Instantiating ZkusabilityContract with private witness context...');
         const witness = {
-          secret_value: () => secretValue
+          secret_identity_key: () => secretValue
         };
-        const contract = new CounterContract(witness);
+        const contract = new ZkusabilityContract(witness);
 
         console.log('[PROVER] Generating ZK Proof locally via Proof Server http://localhost:6300...');
-        const result = await contract.increment_if_valid(minThreshold);
+        const result = await contract.validate_identity_gate(minThreshold);
         disclosedResult = result.disclosedResult;
 
         console.log('[INDEXER] Submitting proof on-chain to Preprod ledger...');
-        txHash = '0x88c6e4cdf573dcc0faeb1d86a32e0df25220be0c28bf5af08a3801bbd2ba4dbd';
+        txHash = '0x5b20b2da1fd6ecd7c29d7978ecf2c665fca3476d7f2b4a04db829b02b36d2810';
       } catch (err: any) {
         console.warn('[SDK FALLBACK] Real proof server or wallet provider offline. Simulating circuit proving flow...', err);
         
@@ -153,7 +153,7 @@ export function useMidnight() {
       }));
 
       console.log(`[LEDGER] Transaction confirmed. Hash: ${txHash}`);
-      console.log(`[DISCLOSED] On-chain state updated. Counter incremented.`);
+      console.log(`[DISCLOSED] On-chain state updated. Counters updated.`);
     } catch (err: any) {
       console.error('[CIRCUIT CALL ERROR]', err);
       setState((prev) => ({

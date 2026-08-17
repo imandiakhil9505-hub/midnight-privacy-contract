@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-interface CircuitCallProps {
+interface ZkRecoveryProps {
   isConnected: boolean;
   isLoading: boolean;
   txHash: string | null;
@@ -9,7 +9,7 @@ interface CircuitCallProps {
   onCallCircuit: (minThreshold: bigint, secretValue: bigint) => void;
 }
 
-export const CircuitCall: React.FC<CircuitCallProps> = ({
+export const ZkRecovery: React.FC<ZkRecoveryProps> = ({
   isConnected,
   isLoading,
   txHash,
@@ -32,7 +32,7 @@ export const CircuitCall: React.FC<CircuitCallProps> = ({
       // Clear the private witness input from UI memory immediately after trigger
       setSecretValue('');
     } catch (err) {
-      alert('Please enter valid integers for threshold and secret score.');
+      alert('Please enter valid integers for threshold and secret credential key.');
     }
   };
 
@@ -48,7 +48,7 @@ export const CircuitCall: React.FC<CircuitCallProps> = ({
         maxWidth: '480px',
         margin: '0 auto'
       }}>
-        🔌 Connect your Lace wallet above to unlock contract circuit features.
+        🔌 Connect your Lace wallet above to unlock ZkUsability recovery functions.
       </div>
     );
   }
@@ -65,7 +65,7 @@ export const CircuitCall: React.FC<CircuitCallProps> = ({
       boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
     }}>
       <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', fontWeight: '600', color: '#60a5fa' }}>
-        Run ZK-SNARK Privacy Proof
+        Run ZkUsability Identity verification
       </h2>
 
       <form onSubmit={handleSubmit}>
@@ -97,14 +97,14 @@ export const CircuitCall: React.FC<CircuitCallProps> = ({
         {/* Private Input (Witness) */}
         <div style={{ marginBottom: '20px' }}>
           <label style={{ display: 'block', fontSize: '14px', color: '#d1d5db', marginBottom: '6px', fontWeight: '500' }}>
-            Private Score (secret_value)
+            Private Identity Key (secret_identity_key)
           </label>
           <input
             type="password"
             value={secretValue}
             onChange={(e) => setSecretValue(e.target.value)}
             disabled={isLoading}
-            placeholder="Enter private value (e.g. 780)"
+            placeholder="Enter secret credential (e.g. 850)"
             style={{
               width: '100%',
               background: 'rgba(0, 0, 0, 0.2)',
@@ -187,13 +187,13 @@ export const CircuitCall: React.FC<CircuitCallProps> = ({
             ✓ Verification Confirmed!
           </h3>
           <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#d1d5db', lineHeight: '1.4' }}>
-            On-chain counter updated. The network verified that your private score met the threshold.
+            Identity validation transaction submitted. The network verified that your private key met the gate criteria.
           </p>
           
           <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>
             <strong>Disclosed Status:</strong>{' '}
             <span style={{ color: disclosedResult ? '#34d399' : '#f87171', fontWeight: 'bold' }}>
-              {disclosedResult ? 'PASSED (>= threshold)' : 'FAILED (< threshold)'}
+              {disclosedResult ? 'VERIFIED (>= threshold)' : 'REJECTED (< threshold)'}
             </span>
           </div>
 

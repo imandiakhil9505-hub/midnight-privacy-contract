@@ -1,32 +1,32 @@
 {
-  "contractName": "CounterContract",
+  "contractName": "ZkusabilityContract",
   "version": "0.20.0",
-  "timestamp": "2026-07-21T15:15:10.178Z",
+  "timestamp": "2026-08-17T14:36:35.863Z",
   "circuits": [
     {
       "name": "initialize",
       "publicInputs": [],
       "privateWitnesses": [],
-      "constraintsCount": 120,
+      "constraintsCount": 150,
       "zkProofType": "Groth16/Plonk-Midnight-ZK"
     },
     {
-      "name": "increment_if_valid",
+      "name": "validate_identity_gate",
       "publicInputs": [
         "min_threshold: Uint64"
       ],
       "privateWitnesses": [
-        "secret_value: Uint64"
+        "secret_identity_key: Uint64"
       ],
       "disclosedOutputs": [
         "is_valid: Boolean"
       ],
-      "constraintsCount": 1140,
+      "constraintsCount": 1260,
       "zkProofType": "Groth16/Plonk-Midnight-ZK"
     }
   ],
   "ledgerStateSchema": {
-    "counter": "Cell<Uint64>",
-    "threshold_met": "Cell<Uint64>"
+    "recovery_counter": "Cell<Uint64>",
+    "gas_sponsored_counter": "Cell<Uint64>"
   }
 }

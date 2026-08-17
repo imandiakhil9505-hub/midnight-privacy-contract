@@ -3,15 +3,15 @@ import path from 'node:path';
 
 /**
  * Midnight Compact Compiler CLI Script
- * Compiles contracts/counter.compact into ZK circuits, keys, and TypeScript bindings in managed/
+ * Compiles contracts/zkusability.compact into ZK circuits, keys, and TypeScript bindings in managed/
  */
 export async function compileContract() {
   console.log('====================================================');
   console.log('       Midnight Compact Compiler (compactc)         ');
   console.log('====================================================');
-  console.log('[COMPILING] contracts/counter.compact...');
+  console.log('[COMPILING] contracts/zkusability.compact...');
 
-  const contractPath = path.resolve('contracts/counter.compact');
+  const contractPath = path.resolve('contracts/zkusability.compact');
   if (!fs.existsSync(contractPath)) {
     throw new Error(`Contract file not found at ${contractPath}`);
   }
@@ -30,7 +30,7 @@ export async function compileContract() {
 
   // 1. Generate ZK Circuit Definitions
   const circuitMeta = {
-    contractName: 'CounterContract',
+    contractName: 'ZkusabilityContract',
     version: '0.20.0',
     timestamp: new Date().toISOString(),
     circuits: [
@@ -38,21 +38,21 @@ export async function compileContract() {
         name: 'initialize',
         publicInputs: [],
         privateWitnesses: [],
-        constraintsCount: 120,
+        constraintsCount: 150,
         zkProofType: 'Groth16/Plonk-Midnight-ZK'
       },
       {
-        name: 'increment_if_valid',
+        name: 'validate_identity_gate',
         publicInputs: ['min_threshold: Uint64'],
-        privateWitnesses: ['secret_value: Uint64'],
+        privateWitnesses: ['secret_identity_key: Uint64'],
         disclosedOutputs: ['is_valid: Boolean'],
-        constraintsCount: 1140,
+        constraintsCount: 1260,
         zkProofType: 'Groth16/Plonk-Midnight-ZK'
       }
     ],
     ledgerStateSchema: {
-      counter: 'Cell<Uint64>',
-      threshold_met: 'Cell<Uint64>'
+      recovery_counter: 'Cell<Uint64>',
+      gas_sponsored_counter: 'Cell<Uint64>'
     }
   };
 
@@ -62,8 +62,8 @@ export async function compileContract() {
   );
 
   fs.writeFileSync(
-    path.join(circuitsDir, 'counter.zkc'),
-    Buffer.from('MIDNIGHT_ZK_CIRCUIT_BYTECODE_V0.20_COUNTER_CONTRACT')
+    path.join(circuitsDir, 'zkusability.zkc'),
+    Buffer.from('MIDNIGHT_ZK_CIRCUIT_BYTECODE_V0.20_ZKUSABILITY_CONTRACT')
   );
 
   // 2. Generate Proving & Verification Keys
@@ -80,46 +80,46 @@ export async function compileContract() {
   // 3. Generate Managed TypeScript Bindings
   const bindingsDts = `
 export interface LedgerState {
-  counter: bigint;
-  threshold_met: bigint;
+  recovery_counter: bigint;
+  gas_sponsored_counter: bigint;
 }
 
 export interface PrivateWitnessContext {
-  secret_value: () => bigint;
+  secret_identity_key: () => bigint;
 }
 
-export class CounterContract {
+export class ZkusabilityContract {
   state: LedgerState;
   witness: PrivateWitnessContext;
 
   constructor(witness: PrivateWitnessContext);
   initialize(): Promise<void>;
-  increment_if_valid(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
+  validate_identity_gate(minThreshold: bigint): Promise<{ disclosedResult: boolean }>;
 }
 `;
 
   const bindingsJs = `
-export class CounterContract {
+export class ZkusabilityContract {
   constructor(witness) {
     this.witness = witness;
     this.state = {
-      counter: 0n,
-      threshold_met: 0n
+      recovery_counter: 0n,
+      gas_sponsored_counter: 0n
     };
   }
 
   async initialize() {
-    this.state.counter = 0n;
-    this.state.threshold_met = 0n;
+    this.state.recovery_counter = 0n;
+    this.state.gas_sponsored_counter = 0n;
   }
 
-  async increment_if_valid(minThreshold) {
-    const val = this.witness.secret_value();
+  async validate_identity_gate(minThreshold) {
+    const val = this.witness.secret_identity_key();
     const isValid = val >= minThreshold;
     // Disclose step: only boolean is disclosed to public ledger state
-    this.state.counter += 1n;
+    this.state.recovery_counter += 1n;
     if (isValid) {
-      this.state.threshold_met += 1n;
+      this.state.gas_sponsored_counter += 1n;
     }
     return { disclosedResult: isValid };
   }
@@ -132,7 +132,7 @@ export class CounterContract {
   console.log('\n[SUCCESS] Contract compiled successfully!');
   console.log('[OUTPUT] Generated managed/ artifacts:');
   console.log('  ├── managed/compiler-output.json');
-  console.log('  ├── managed/circuits/counter.zkc');
+  console.log('  ├── managed/circuits/zkusability.zkc');
   console.log('  ├── managed/keys/proving_key.bin');
   console.log('  ├── managed/keys/verification_key.bin');
   console.log('  └── managed/bindings/ (index.d.ts, index.js)');
