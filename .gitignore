@@ -4,3 +4,5 @@ dist/
 .gemini/
 managed/circuits/*.zkc
 managed/keys/*.bin
+*.mp4
+

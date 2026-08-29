@@ -8,6 +8,12 @@
 
 [https://midnight-privacy-contract-imandiakh.vercel.app](https://midnight-privacy-contract-imandiakh.vercel.app)
 
+## Demo Video
+
+🎥 **Watch Walkthrough**: [Local Video Link (demo.mp4)](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/demo.mp4)
+
+*(Note: The `demo.mp4` file is 156MB and is kept locally inside the project root folder. If submitting online, upload this to YouTube/Loom and replace this link!)*
+
 ## Contract Address
 
 | Network  | Address                              |
