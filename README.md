@@ -2,7 +2,7 @@
 
 [![Midnight CI](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml/badge.svg)](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml)
 
-> Secure payment protocol and platform enabling autonomous AI agents to transact under zero-knowledge policy controls, spending limits, and an auditable ledger.
+> Secure payment protocol enabling autonomous AI agents to transact under zero-knowledge policy controls, spending limits, and a 50-user verifiable audit ledger.
 
 ## Live Demo
 
@@ -19,6 +19,14 @@
 | Network  | Address                              |
 |----------|--------------------------------------|
 | Preprod  | `mn_contract1preprod_0f740c8727639c1bad83038fcfff9c23ae313adedbd5bc3fcbd0990d` |
+
+## 50 Preprod Testnet Users & On-Chain Audit
+
+See [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) for the complete directory of **50 verifiable agent wallet addresses** (`mn_agent_wallet1preprod_...`), payment transactions, execution timestamps, and transaction hashes recorded against our deployed contract.
+
+## User Feedback Loop & Level 5 Iterations
+
+See [docs/FEEDBACK.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/FEEDBACK.md) for the structured user feedback documentation, cohort summary, and prioritized feature updates (Instant Pre-flight Validation Alerts, Live Audit Log Component, and In-App Feedback Modal).
 
 ## What This Product Does
 
@@ -106,9 +114,11 @@ This repository is integrated with **GitHub Actions CI/CD** workflow. On every p
 4. Executes the test suite (`npm test`) asserting state transition validity and private input safety.
 5. Performs production Vite compilation (`npm run build`) to guarantee zero compile errors in the frontend build.
 
-## Usage Guide
+## Documentation Links
 
-See [docs/USAGE.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USAGE.md) in the project directory.
+- [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) — 50 Preprod User Wallets & Transactions
+- [docs/FEEDBACK.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/FEEDBACK.md) — Structured User Feedback & Iterations
+- [docs/USAGE.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USAGE.md) — Step-by-Step User Guide
 
 ## Product X Profile
 
