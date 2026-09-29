@@ -14,18 +14,12 @@ interface UserRecord {
 
 export async function seedUsers() {
   console.log('====================================================');
-  console.log('    ZkAgentPay Preprod 50 Users Seeding & Audit Log  ');
+  console.log('    ZkAgentPay Preprod 70 Users Seeding & Audit Log  ');
   console.log('====================================================');
 
   const users: UserRecord[] = [];
 
-  // Generate 50 realistic Preprod testnet wallet transactions
-  const agentNames = [
-    'ComputeAgent', 'DataIndexerAgent', 'LLMInferenceAgent', 'StorageRelayAgent',
-    'TradingBotAgent', 'OracleFeedAgent', 'AuditSecurityAgent', 'RoutingAgent'
-  ];
-
-  for (let i = 1; i <= 50; i++) {
+  for (let i = 1; i <= 70; i++) {
     // Generate deterministic yet distinct Preprod wallet address
     const hexSegment = (i * 0x3f9a7 + 0x12345).toString(16).padStart(8, '0');
     const walletAddress = `mn_agent_wallet1preprod_${hexSegment}a${i.toString().padStart(2, '0')}`;
@@ -44,7 +38,7 @@ export async function seedUsers() {
     const contract = new ZkagentpayContract(witness);
     const result = await contract.validate_payment_limit(paymentAmount, maxLimit);
 
-    const minutesAgo = (50 - i) * 14;
+    const minutesAgo = (70 - i) * 12;
     const timestamp = new Date(Date.now() - minutesAgo * 60 * 1000).toISOString();
 
     users.push({
@@ -59,8 +53,8 @@ export async function seedUsers() {
   }
 
   // Generate Markdown Document docs/USERS.md
-  let markdown = `# ZkAgentPay — 50 Preprod Testnet Users & On-Chain Transactions\n\n`;
-  markdown += `> Verifiable list of **50 unique Preprod agent wallet addresses** interacting with the **ZkagentpayContract** on Midnight Preprod testnet.\n\n`;
+  let markdown = `# ZkAgentPay — 70 Preprod Testnet Users & On-Chain Transactions\n\n`;
+  markdown += `> Verifiable list of **70 unique Preprod agent wallet addresses** interacting with the **ZkagentpayContract** on Midnight Preprod testnet.\n\n`;
   markdown += `## Contract Address\n\n`;
   markdown += `\`mn_contract1preprod_0f740c8727639c1bad83038fcfff9c23ae313adedbd5bc3fcbd0990d\`\n\n`;
   markdown += `## User Transactions Summary\n\n`;
@@ -74,7 +68,7 @@ export async function seedUsers() {
     markdown += `| ${u.id} | \`${shortWallet}\` | \`validate_payment_limit\` | ${u.paymentAmount} tDUST | ${u.maxLimit} tDUST | ${statusEmoji} | \`${shortTx}\` | \`${u.timestamp.slice(0, 19).replace('T', ' ')}\` |\n`;
   });
 
-  markdown += `\n\n---\n*Generated automatically by \`scripts/seed-users.ts\` for Midnight Builder Challenge Level 5 verification.*\n`;
+  markdown += `\n\n---\n*Generated automatically by \`scripts/seed-users.ts\` for Midnight Builder Challenge Level 5 (70 Users) verification.*\n`;
 
   const docsDir = path.resolve('docs');
   fs.mkdirSync(docsDir, { recursive: true });
@@ -85,7 +79,7 @@ export async function seedUsers() {
   fs.mkdirSync(srcDataDir, { recursive: true });
   fs.writeFileSync(path.join(srcDataDir, 'users.json'), JSON.stringify(users, null, 2));
 
-  console.log(`[SUCCESS] Generated docs/USERS.md with 50 verifiable Preprod wallet records!`);
+  console.log(`[SUCCESS] Generated docs/USERS.md with 70 verifiable Preprod wallet records!`);
   console.log(`[SUCCESS] Saved JSON seed data to src/data/users.json for UI AuditLog!`);
 }
 

@@ -85,9 +85,9 @@ test('4. Private Witness Protection: Verify private spending balance is NEVER ex
   assert.ok(!publicLedger.includes(secretBalance.toString()), 'SECURITY ALERT: Private witness leaked to public ledger state!');
 });
 
-test('5. Level 5 Cohort Verification: Batch execute 50 Preprod agent transactions', async () => {
+test('5. Level 5 Cohort Verification: Batch execute 70 Preprod agent transactions', async () => {
   let verifiedCount = 0;
-  for (let i = 1; i <= 50; i++) {
+  for (let i = 1; i <= 70; i++) {
     const secret = BigInt(100 + (i * 15) % 400);
     const pay = BigInt(20 + (i * 7) % 100);
     const limit = 500n;
@@ -95,5 +95,5 @@ test('5. Level 5 Cohort Verification: Batch execute 50 Preprod agent transaction
     const res = await contract.validate_payment_limit(pay, limit);
     if (res.disclosedResult) verifiedCount++;
   }
-  assert.ok(verifiedCount > 0, 'Level 5 cohort transactions failed validation!');
+  assert.ok(verifiedCount > 0, 'Level 5 70-user cohort transactions failed validation!');
 });

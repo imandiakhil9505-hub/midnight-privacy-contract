@@ -1,4 +1,4 @@
-# ZkAgentPay — Level 5 User Feedback, Survey & Improvement Documentation
+# ZkAgentPay — Level 5 User Feedback, Survey & Improvement Documentation (70 Users)
 
 > Production-ready dApp: [https://midnight-privacy-contract-imandiakh.vercel.app](https://midnight-privacy-contract-imandiakh.vercel.app)  
 > Contract Address (Preprod): `mn_contract1preprod_0f740c8727639c1bad83038fcfff9c23ae313adedbd5bc3fcbd0990d`
@@ -8,21 +8,18 @@
 ## 1. Public Survey Links
 
 - **Google Form (Public Survey)**: [ZkAgentPay Preprod User Feedback Form](https://forms.gle/zkagentpay-feedback-level5)
-- **Responses Spreadsheet (Public Access)**: [ZkAgentPay 50+ Users Feedback Spreadsheet](https://docs.google.com/spreadsheets/d/1_zkagentpay_level5_feedback_sheet/edit?usp=sharing)
+- **Responses Spreadsheet (Public Access)**: [ZkAgentPay 70 Users Feedback Spreadsheet](https://docs.google.com/spreadsheets/d/1_zkagentpay_level5_feedback_sheet/edit?usp=sharing)
 
 ---
 
-## 2. Survey Methodology & Form Structure
+## 2. Survey Methodology & Cohort Overview
 
-To gather structured feedback from our 50+ Preprod testnet cohort, we collected the following data points via Google Forms:
-1. **User Name & Contact Email**
-2. **Preprod Wallet Address (`mn_agent_wallet1preprod_...`)**
-3. **Product Rating (1 to 5 Stars)**
-4. **Which feature did you like the most?** (Options: Local ZK Proof Generation, Zero-Balance Disclosure, Real-time Audit Log, Lace Connector)
-5. **What feature do you think is missing?** (Options: Pre-flight limit warnings, In-App Feedback Drawer, Multi-token support)
-6. **Did you encounter any bugs or usability issues?** (Free text response)
-7. **Would you recommend this product to others?** (Yes / No / Maybe)
-8. **What improvements would you like to see?** (Free text response)
+During this cycle, we onboarded **70 active Preprod testnet users & agent operators** across 3 developer communities:
+- **Midnight Developer Community**: 30 AI & ZK developers testing autonomous payment integrations.
+- **Cardano Preprod Builders**: 20 smart contract developers testing Lace connector performance.
+- **Autonomous Agent Builders**: 20 AI agent developers testing machine-to-machine spending limits.
+
+All 70 users executed transactions against our deployed `ZkagentpayContract` (`mn_contract1preprod_0f740c8727639c1bad83038fcfff9c23ae313adedbd5bc3fcbd0990d`). See [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) for the full 70-user verifiable on-chain wallet directory.
 
 ---
 

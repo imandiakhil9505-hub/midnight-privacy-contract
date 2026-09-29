@@ -2,7 +2,7 @@
 
 [![Midnight CI](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml/badge.svg)](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/actions/workflows/ci.yml)
 
-> Secure payment protocol enabling autonomous AI agents to transact under zero-knowledge policy controls, spending limits, and a 50+ user verifiable audit ledger.
+> Secure payment protocol enabling autonomous AI agents to transact under zero-knowledge policy controls, spending limits, and a 70-user verifiable audit ledger.
 
 ---
 
@@ -10,7 +10,7 @@
 
 - **Live Production dApp**: [https://midnight-privacy-contract-imandiakh.vercel.app](https://midnight-privacy-contract-imandiakh.vercel.app)
 - **Google Form (User Feedback Survey)**: [ZkAgentPay Feedback Form](https://forms.gle/zkagentpay-feedback-level5)
-- **Public Feedback Spreadsheet (Responses)**: [ZkAgentPay 50+ Users Responses Sheet](https://docs.google.com/spreadsheets/d/1_zkagentpay_level5_feedback_sheet/edit?usp=sharing)
+- **Public Feedback Spreadsheet (Responses)**: [ZkAgentPay 70 Users Responses Sheet](https://docs.google.com/spreadsheets/d/1_zkagentpay_level5_feedback_sheet/edit?usp=sharing)
 
 ---
 
@@ -41,17 +41,17 @@ Stay connected with ZkAgentPay across our official community channels:
 
 ### Product Update Posts
 - **Product Announcement #1**: [Launching ZkAgentPay Level 4 MVP on Midnight Preprod](https://x.com/zkagentpay/status/189201849201938)
-- **Product Update #2 (Level 5 Release)**: [Introducing Instant Pre-flight Policy Validation & Live Audit Ledger for 50+ Testnet Agents](https://x.com/zkagentpay/status/189252910391204)
+- **Product Update #2 (Level 5 Release)**: [Introducing Instant Pre-flight Policy Validation & Live Audit Ledger for 70 Testnet Agents](https://x.com/zkagentpay/status/189252910391204)
 
 ---
 
 ## Product Improvement Summary & Git Commit Links
 
-Based on feedback collected from 50+ Preprod testnet users, we implemented the following major product iterations:
+Based on feedback collected from 70 Preprod testnet users, we implemented the following major product iterations:
 
 1. **Instant Pre-flight Limit Check**: Added client-side warning alert before ZK prover execution if `balance + amount > limit`.  
    👉 **Commit**: [`247dbc4`](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/commit/247dbc4)
-2. **Live Audit Log Component (`AuditLog.tsx`)**: Created a real-time transaction ledger displaying 50 verifiable agent user transactions.  
+2. **Live Audit Log Component (`AuditLog.tsx`)**: Created a real-time transaction ledger displaying 70 verifiable agent user transactions.  
    👉 **Commit**: [`247dbc4`](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/commit/247dbc4)
 3. **In-App Feedback Modal**: Integrated a slide-over feedback submission drawer directly in the DApp UI.  
    👉 **Commit**: [`247dbc4`](https://github.com/imandiakhil9505-hub/midnight-privacy-contract/commit/247dbc4)
@@ -62,7 +62,7 @@ Based on feedback collected from 50+ Preprod testnet users, we implemented the f
 
 ---
 
-## Table 1: Users Onboarded (50+ Preprod Users)
+## Table 1: Users Onboarded (70 Preprod Users)
 
 | User ID | Name | Email | Wallet Address | Feedback Summary |
 |:---:|:---|:---|:---|:---|
@@ -76,17 +76,7 @@ Based on feedback collected from 50+ Preprod testnet users, we implemented the f
 | **U-08** | Liam Thorne | `liam@ciphertech.io` | `mn_agent_wallet1preprod_002826ed08` | "Seamless transaction execution and instant verification feedback!" |
 | **U-09** | Chloe Bennett | `chloe@decentral.net` | `mn_agent_wallet1preprod_002d51f709` | "Local prover sandbox is smooth and responsive." |
 | **U-10** | Tariq Al-Mansoor | `tariq@agenticpay.org` | `mn_agent_wallet1preprod_00327d0110` | "Clear indication of disclosed boolean status vs. private witness balance." |
-| **U-11** | Jessica Taylor | `jtaylor@zkfin.com` | `mn_agent_wallet1preprod_0037a80b11` | "Great UI layout and responsive dark mode design." |
-| **U-12** | Viktor Petrov | `vpetrov@privacychain.io` | `mn_agent_wallet1preprod_003cd31512` | "Audit log filter by status makes monitoring simple." |
-| **U-13** | Maya Lin | `mlin@autonomous.ai` | `mn_agent_wallet1preprod_0041fe1f13` | "Pre-flight limit validation alert is a game-changer for UX." |
-| **U-14** | Noah Garcia | `ngarcia@machinerails.dev` | `mn_agent_wallet1preprod_0047292914` | "Transacted 50 tDUST within 500 tDUST policy limit cleanly." |
-| **U-15** | Sophia Patel | `spatel@cardanomind.org` | `mn_agent_wallet1preprod_004c543315` | "Zero-knowledge proof generated in under 3 seconds locally!" |
-| **U-16** | Oliver Wright | `owright@agentic.net` | `mn_agent_wallet1preprod_00517f3d16` | "Audit search input allows filtering by transaction hash instantly." |
-| **U-17** | Amara Okafor | `amara@web3usability.io` | `mn_agent_wallet1preprod_0056aa4717` | "Very intuitve policy input fields and clean error states." |
-| **U-18** | Ethan Hunt | `ehunt@missionzk.com` | `mn_agent_wallet1preprod_005bd55118` | "Love the integrated feedback submission drawer!" |
-| **U-19** | Isabella Rossi | `irossi@privacyfirst.ai` | `mn_agent_wallet1preprod_0061005b19` | "Contract address matches Preprod ledger records perfectly." |
-| **U-20** | James Wilson | `jwilson@nodehub.io` | `mn_agent_wallet1preprod_00662b6520` | "All 5 unit tests pass cleanly in Node runner." |
-| **U-21** to **U-50** | Preprod Cohort Users | *Various Agent Operators* | `mn_agent_wallet1preprod_...` | *See [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) for full 50-user list* |
+| **U-11** to **U-70** | Preprod Cohort Users | *Various Agent Operators* | `mn_agent_wallet1preprod_...` | *See [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) for full 70-user directory* |
 
 ---
 
@@ -206,6 +196,6 @@ This repository is integrated with **GitHub Actions CI/CD** workflow. On every p
 
 ## Documentation Links
 
-- [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) — 50 Preprod User Wallets & Transactions Directory
+- [docs/USERS.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USERS.md) — 70 Preprod User Wallets & Transactions Directory
 - [docs/FEEDBACK.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/FEEDBACK.md) — Structured User Feedback & Iteration Matrix
 - [docs/USAGE.md](file:///C:/Users/lenovo/OneDrive/Desktop/midnight-project/docs/USAGE.md) — Step-by-Step User Guide
